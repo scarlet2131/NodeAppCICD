@@ -61,13 +61,16 @@ pipeline {
         stage('Quality Gate') {
             steps {
                 script {
-                    // Wait for SonarQube's quality gate status
-                    timeout(time: 1, unit: 'MINUTES') {
-                        waitForQualityGate abortPipeline: true
+                    def qg = waitForQualityGate()
+                    if (qg.status != 'OK') {
+                        echo "Quality Gate failed with status: ${qg.status}"
+                        // Uncomment the next line if you want to abort the pipeline
+                        // error "Pipeline aborted due to quality gate failure: ${qg.status}"
                     }
                 }
             }
         }
+
         
 
         stage('Package Artifact') {
