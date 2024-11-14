@@ -1,11 +1,12 @@
-const path = require('path');
-const webpack = require('webpack');
+import path from 'path';
+import webpack from 'webpack';
+
 
 module.exports = {
     entry: './app.js', // Entry point for your application
     output: {
         filename: 'bundle.js', // Output file name
-        path: path.resolve(__dirname, 'dist'), // Output directory
+        path: path.resolve(process.cwd(), 'dist'), // Output directory
     },
     mode: 'production', // Set mode to production
     target: 'web', // Target environment is the web
