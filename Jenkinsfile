@@ -14,30 +14,35 @@ pipeline {
     stages {
         stage('Checkout Code') {
             steps {
-                git  branch: 'main', credentialsId: "${GITHUB_CREDENTIALS_ID}", url: 'https://github.com/scarlet2131/NodeAppCICD.git'
+                // Pull the latest code from the GitHub repository
+                git branch: 'main', credentialsId: "${GITHUB_CREDENTIALS_ID}", url: 'https://github.com/scarlet2131/NodeAppCICD.git'
             }
         }
 
         stage('Install Dependencies') {
             steps {
+                // Install all required Node.js dependencies
                 sh 'npm install'
             }
         }
 
-        stage('Build') {
+        stage('Build with Webpack') {
             steps {
-                sh 'npm run build'
+                // Run Webpack to bundle the application
+                sh 'npx webpack'
             }
         }
 
         stage('Run Tests') {
             steps {
+                // Run any defined tests (adjust as per your test setup)
                 sh 'npm test'
             }
         }
 
         stage('SonarQube Analysis') {
             steps {
+                // Perform static code analysis using SonarQube
                 withSonarQubeEnv('SonarQube') {
                     sh 'sonar-scanner -Dsonar.projectKey=my-nodejs-project'
                 }
@@ -47,6 +52,7 @@ pipeline {
         stage('Quality Gate') {
             steps {
                 script {
+                    // Wait for SonarQube's quality gate status
                     timeout(time: 1, unit: 'MINUTES') {
                         waitForQualityGate abortPipeline: true
                     }
@@ -56,12 +62,14 @@ pipeline {
 
         stage('Package Artifact') {
             steps {
-                sh 'zip -r node-app.zip dist/'
+                // Package the application into a zip file
+                sh 'zip -r node-app.zip dist/ public/ package.json package-lock.json'
             }
         }
 
         stage('Deploy to Nexus') {
             steps {
+                // Upload the package to Nexus repository
                 nexusArtifactUploader(
                     nexusVersion: 'nexus3',
                     protocol: 'http',
@@ -79,8 +87,9 @@ pipeline {
 
         stage('Deploy Application') {
             steps {
+                // Use PM2 to stop the old version and start the new one
                 sh 'pm2 stop node-app || true'
-                sh 'pm2 start dist/server.js --name node-app --watch'
+                sh 'pm2 start dist/bundle.js --name node-app --watch'
             }
         }
     }
