@@ -2,13 +2,13 @@ pipeline {
     agent any
 
     environment {
-        NODEJS_HOME = tool name: 'NodeJS' // Ensure this matches your NodeJS tool in Jenkins
+        NODEJS_HOME = tool name: 'NodeJS'
         PATH = "${NODEJS_HOME}/bin:${env.PATH}"
-        SONARQUBE_SERVER = 'SonarQube'   // Ensure this matches your SonarQube server name in Jenkins
-        GITHUB_CREDENTIALS_ID = 'github-pat' // GitHub credentials ID
-        NEXUS_URL = 'http://localhost:8081' // Nexus URL
-        NEXUS_REPO = 'node-app-repo'  // Replace with your Nexus repository name
-        NEXUS_CREDENTIALS_ID = 'nexus-credentials' // Nexus credentials ID
+        SONARQUBE_SERVER = 'SonarQube'
+        GITHUB_CREDENTIALS_ID = 'github-credentials'
+        NEXUS_URL = 'http://localhost:8081'
+        NEXUS_REPO = 'node-app-repo'
+        NEXUS_CREDENTIALS_ID = 'nexus-credentials'
     }
 
     stages {
@@ -26,19 +26,19 @@ pipeline {
 
         stage('Build') {
             steps {
-                sh 'npm run build' // Replace with your build command if different
+                sh 'npm run build'
             }
         }
 
         stage('Run Tests') {
             steps {
-                sh 'npm test' // Replace with your test command if different
+                sh 'npm test'
             }
         }
 
         stage('SonarQube Analysis') {
             steps {
-                withSonarQubeEnv('SonarQube') { // Ensure this matches your SonarQube server name
+                withSonarQubeEnv('SonarQube') {
                     sh 'sonar-scanner -Dsonar.projectKey=my-nodejs-project'
                 }
             }
@@ -56,27 +56,31 @@ pipeline {
 
         stage('Package Artifact') {
             steps {
-                sh 'zip -r node-app.zip dist/' // Replace dist/ with your build output directory
+                sh 'zip -r node-app.zip dist/'
             }
         }
 
         stage('Deploy to Nexus') {
             steps {
-                nexusArtifactUploader artifacts: [
-                    [artifactId: 'node-app', classifier: '', file: 'node-app.zip', type: 'zip']
-                ],
-                credentialsId: "${NEXUS_CREDENTIALS_ID}",
-                groupId: 'com.example',
-                nexusUrl: "${NEXUS_URL}",
-                repository: "${NEXUS_REPO}",
-                version: '1.0.0'
+                nexusArtifactUploader(
+                    nexusVersion: 'nexus3',
+                    protocol: 'http',
+                    nexusUrl: "${NEXUS_URL}",
+                    repository: "${NEXUS_REPO}",
+                    credentialsId: "${NEXUS_CREDENTIALS_ID}",
+                    artifacts: [
+                        [artifactId: 'node-app', classifier: '', file: 'node-app.zip', type: 'zip']
+                    ],
+                    groupId: 'com.example',
+                    version: '1.0.0'
+                )
             }
         }
 
         stage('Deploy Application') {
             steps {
-                sh 'pm2 stop node-app || true' // Stop the old app
-                sh 'pm2 start app.js --name node-app --watch' // Start the new app
+                sh 'pm2 stop node-app || true'
+                sh 'pm2 start dist/server.js --name node-app --watch'
             }
         }
     }
