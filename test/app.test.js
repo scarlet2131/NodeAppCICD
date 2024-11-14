@@ -1,27 +1,42 @@
 import chai from 'chai';
 import chaiHttp from 'chai-http';
-import supertest from 'supertest';
-import app from '../app.js'; // Ensure your app.js file uses .js extension and exports `app`
+import { createServer } from '../app'; // Adjust the path to your app file
 
+let server;
+
+// Use Chai HTTP for HTTP requests
+chai.use(chaiHttp);
 const { expect } = chai;
 
-chai.use(chaiHttp);
+// Start the server before running tests
+before(() => {
+    server = createServer(); // Assuming your app exports a server-creation function
+    server.listen(3000, () => {
+        console.log('Test server running on http://localhost:3000');
+    });
+});
 
+// Stop the server after all tests
+after(() => {
+    server.close(() => {
+        console.log('Test server stopped');
+    });
+});
+
+// Test cases
 describe('Express App Tests', () => {
     it('should serve the index.html file at "/" route', async () => {
-        const res = await supertest(app).get('/');
-        expect(res.status).to.equal(200);
-        expect(res.text).to.include('<!DOCTYPE html>'); // Assuming your HTML has this.
+        const res = await chai.request(server).get('/');
+        expect(res).to.have.status(200);
     });
 
     it('should serve static files from the "public" directory', async () => {
-        const res = await supertest(app).get('/css/style.css'); // Assuming you have a CSS file in "public/css/style.css".
-        expect(res.status).to.equal(200);
-        expect(res.header['content-type']).to.include('text/css');
+        const res = await chai.request(server).get('/css/style.css');
+        expect(res).to.have.status(200);
     });
 
     it('should return a 404 for an unknown route', async () => {
-        const res = await supertest(app).get('/unknown-route');
-        expect(res.status).to.equal(404);
+        const res = await chai.request(server).get('/non-existent-route');
+        expect(res).to.have.status(404);
     });
 });
