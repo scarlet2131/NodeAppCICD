@@ -6,7 +6,7 @@
   "scripts": {
     "start": "node app.js",
     "build": "webpack --config webpack.config.mjs",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "mocha test/**/*.test.js --exit"
   },
   "keywords": [],
   "author": "",
