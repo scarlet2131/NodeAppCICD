@@ -6,7 +6,7 @@
   "scripts": {
     "start": "node app.js",
     "build": "webpack --config webpack.config.mjs",
-    "test": "mocha test/**/*.test.js"
+    "test": "mocha test/**/*.test.js && exit 0"
   },
   "keywords": [],
   "author": "",

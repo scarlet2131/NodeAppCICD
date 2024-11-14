@@ -33,17 +33,18 @@ pipeline {
             }
         }
 
-        stage('Run Tests') {
+        stage('Test') {
             steps {
                 script {
                     try {
                         sh 'npm test'
-                    } catch (err) {
-                        echo "Skipping tests: ${err}"
+                    } catch (Exception e) {
+                        error "Tests failed!"
                     }
                 }
             }
         }
+        
 
         stage('SonarQube Analysis') {
             steps {
