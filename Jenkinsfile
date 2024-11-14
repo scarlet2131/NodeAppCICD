@@ -6,7 +6,7 @@ pipeline {
         PATH = "${NODEJS_HOME}/bin:${env.PATH}"
         SONARQUBE_SERVER = 'SonarQube'
         GITHUB_CREDENTIALS_ID = 'github-pat'
-        NEXUS_URL = 'http://10.0.0.129:8081'   // Ensure the Nexus server is reachable
+        NEXUS_URL = 'http://10.0.0.129:8081'
         NEXUS_REPO = 'node-app-repo'
         NEXUS_CREDENTIALS_ID = 'nexus'
     }
@@ -49,12 +49,13 @@ pipeline {
             steps {
                 withSonarQubeEnv('SonarQube') {
                     script {
-                        def scannerHome = tool 'SonarScanner' // Ensure this matches the name you configured in Jenkins
+                        def scannerHome = tool 'SonarScanner' // Ensure this matches the name you configured
                         sh "${scannerHome}/bin/sonar-scanner -Dsonar.projectKey=my-nodejs-project"
                     }
                 }
             }
         }
+
 
         stage('Quality Gate') {
             steps {
@@ -77,25 +78,28 @@ pipeline {
         stage('Deploy to Nexus') {
             steps {
                 // Upload the package to Nexus repository
-                nexusArtifactUploader(
-                    nexusVersion: 'nexus3',
-                    protocol: 'http',
-                    nexusUrl: "${NEXUS_URL}",
-                    repository: "${NEXUS_REPO}",
-                    credentialsId: "${NEXUS_CREDENTIALS_ID}",
-                    artifacts: [
-                        [
-                            artifactId: 'node-app',
-                            groupId: 'com.github.scarlet2131',   // This identifies your project uniquely
-                            version: '1.0.0',                   // Version of the artifact
-                            classifier: '',                     // Leave empty if no classifier is used
-                            file: 'node-app.zip',               // The file to be uploaded
-                            type: 'zip'                         // File type
-                        ]
-                    ]
-                )
+                // nexusArtifactUploader(
+                //     nexusVersion: 'nexus3',
+                //     protocol: 'http',
+                //     nexusUrl: "${NEXUS_URL}",
+                //     repository: "${NEXUS_REPO}",
+                //     credentialsId: "${NEXUS_CREDENTIALS_ID}",
+                //     artifacts: [
+                //         [
+                //             artifactId: 'node-app',
+                //             groupId: 'com.github.scarlet2131',
+                //             version: '1.0.0',                 // Version of the artifact
+                //             classifier: '',
+                //             file: 'node-app.zip',
+                //             type: 'zip'
+                //         ]
+                //     ]
+                // )
+
+                nexusArtifactUploader credentialsId: 'nexus', groupId: 'com.github.scarlet2131', nexusUrl: '10.0.0.129:8081', nexusVersion: 'nexus2', protocol: 'http', repository: 'node-app-repo', version: '1.0.0'
             }
         }
+
 
         stage('Deploy Application') {
             steps {
