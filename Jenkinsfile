@@ -6,7 +6,7 @@ pipeline {
         PATH = "${NODEJS_HOME}/bin:${env.PATH}"
         SONARQUBE_SERVER = 'SonarQube'
         GITHUB_CREDENTIALS_ID = 'github-pat'
-        NEXUS_URL = 'http://localhost:8081'
+        NEXUS_URL = 'http://10.0.0.129:8081'
         NEXUS_REPO = 'node-app-repo'
         NEXUS_CREDENTIALS_ID = 'nexus'
     }
@@ -87,7 +87,7 @@ pipeline {
                     artifacts: [
                         [
                             artifactId: 'node-app',
-                            groupId: 'com.github.scarlet2131',  
+                            groupId: 'com.github.scarlet2131',
                             version: '1.0.0',                 // Version of the artifact
                             classifier: '',
                             file: 'node-app.zip',
