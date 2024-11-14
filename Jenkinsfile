@@ -87,7 +87,7 @@ pipeline {
                     artifacts: [
                         [
                             artifactId: 'node-app',
-                            groupId: 'com.github.scarlet2131'
+                            groupId: 'com.github.scarlet2131',
                             version: '1.0.0',
                             classifier: '',
                             file: 'node-app.zip',
