@@ -6,7 +6,7 @@
   "scripts": {
     "start": "node app.js",
     "build": "webpack --config webpack.config.mjs",
-    "test": "mocha test/**/*.test.js --exit"
+    "test": "nyc --reporter=lcov mocha test/**/*.test.js --exit"
   },
   "keywords": [],
   "author": "",
@@ -27,6 +27,7 @@
     "crypto-browserify": "^3.12.1",
     "https-browserify": "^1.0.0",
     "mocha": "^8.4.0",
+    "nyc": "^17.1.0",
     "path-browserify": "^1.0.1",
     "process": "^0.11.10",
     "querystring-es3": "^0.2.1",
