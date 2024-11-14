@@ -14,7 +14,7 @@ pipeline {
     stages {
         stage('Checkout Code') {
             steps {
-                git credentialsId: "${GITHUB_CREDENTIALS_ID}", url: 'https://github.com/scarlet2131/NodeAppCICD.git'
+                git  branch: 'main', credentialsId: "${GITHUB_CREDENTIALS_ID}", url: 'https://github.com/scarlet2131/NodeAppCICD.git'
             }
         }
 
