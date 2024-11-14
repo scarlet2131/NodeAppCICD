@@ -18,6 +18,7 @@ import express from 'express';
 import path from 'path';
 import { fileURLToPath } from 'url';
 
+// Resolve __dirname in ES modules
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
@@ -36,4 +37,5 @@ app.listen(port, () => {
     console.log(`App running at http://localhost:${port}`);
 });
 
+// Export app for testing
 export default app;

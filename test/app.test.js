@@ -1,9 +1,10 @@
 import chai from 'chai';
 import chaiHttp from 'chai-http';
 import supertest from 'supertest';
-import app from '../app.js'; // Ensure your app.js file uses .js extension if you're using ES modules.
+import app from '../app.js'; // Ensure your app.js file uses .js extension and exports `app`
 
 const { expect } = chai;
+
 chai.use(chaiHttp);
 
 describe('Express App Tests', () => {
