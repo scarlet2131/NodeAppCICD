@@ -87,8 +87,8 @@ pipeline {
                     artifacts: [
                         [
                             artifactId: 'node-app',
-                            groupId: 'com.github.scarlet2131',
-                            version: '1.0.0',
+                            groupId: 'com.github.scarlet2131',  
+                            version: '1.0.0',                 // Version of the artifact
                             classifier: '',
                             file: 'node-app.zip',
                             type: 'zip'
@@ -97,6 +97,7 @@ pipeline {
                 )
             }
         }
+
 
         stage('Deploy Application') {
             steps {
