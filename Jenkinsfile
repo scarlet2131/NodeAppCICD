@@ -99,6 +99,20 @@ pipeline {
                 nexusArtifactUploader artifacts: [[artifactId: 'node-app', classifier: '', file: 'node-app.zip', type: 'zip']], credentialsId: 'nexus', groupId: 'com.github.scarlet2131', nexusUrl: '10.0.0.129:8081', nexusVersion: 'nexus3', protocol: 'http', repository: 'node-app-repo', version: '1.0.0'            }
         }
 
+        stage('Install PM2') {
+            steps {
+                sh 'npm install -g pm2'
+            }
+        }
+
+        stage('Check PATH') {
+            steps {
+                sh 'echo $PATH'
+                sh 'which pm2'
+            }
+        }
+
+
 
         stage('Deploy Application') {
             steps {
