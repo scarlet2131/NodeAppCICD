@@ -6,7 +6,7 @@
   "scripts": {
     "start": "node app.js",
     "build": "webpack --config webpack.config.mjs",
-    "test": "nyc --reporter=lcov mocha test/**/*.test.js --exit"
+    "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [],
   "author": "",
