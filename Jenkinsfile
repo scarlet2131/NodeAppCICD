@@ -85,10 +85,15 @@ pipeline {
                     repository: "${NEXUS_REPO}",
                     credentialsId: "${NEXUS_CREDENTIALS_ID}",
                     artifacts: [
-                        [artifactId: 'node-app', classifier: '', file: 'node-app.zip', type: 'zip']
-                    ],
-                    groupId: 'com.example',
-                    version: '1.0.0'
+                        [
+                            artifactId: 'node-app',
+                            groupId: 'com.example',
+                            version: '1.0.0',
+                            classifier: '',
+                            file: 'node-app.zip',
+                            type: 'zip'
+                        ]
+                    ]
                 )
             }
         }
