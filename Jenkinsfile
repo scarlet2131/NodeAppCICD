@@ -47,12 +47,15 @@ pipeline {
 
         stage('SonarQube Analysis') {
             steps {
-                // Perform static code analysis using SonarQube
                 withSonarQubeEnv('SonarQube') {
-                    sh 'sonar-scanner -Dsonar.projectKey=my-nodejs-project'
+                    script {
+                        def scannerHome = tool 'SonarScanner' // Ensure this matches the name you configured
+                        sh "${scannerHome}/bin/sonar-scanner -Dsonar.projectKey=my-nodejs-project"
+                    }
                 }
             }
         }
+
 
         stage('Quality Gate') {
             steps {
