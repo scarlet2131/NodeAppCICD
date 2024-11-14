@@ -5,10 +5,10 @@ pipeline {
         NODEJS_HOME = tool name: 'NodeJS'
         PATH = "${NODEJS_HOME}/bin:${env.PATH}"
         SONARQUBE_SERVER = 'SonarQube'
-        GITHUB_CREDENTIALS_ID = 'github-credentials'
+        GITHUB_CREDENTIALS_ID = 'github-pat'
         NEXUS_URL = 'http://localhost:8081'
         NEXUS_REPO = 'node-app-repo'
-        NEXUS_CREDENTIALS_ID = 'nexus-credentials'
+        NEXUS_CREDENTIALS_ID = 'nexus'
     }
 
     stages {
